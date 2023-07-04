@@ -5,6 +5,7 @@ from .views import (
     LimitedProductListApiView,
     BannersListApiView,
     SaleListApiView,
+    CatalogFilterListApiView,
 )
 
 
@@ -15,5 +16,6 @@ urlpatterns = [
     path('products/popular', PopularProductListApiView.as_view(), name='popular-products'),
     path('products/limited', LimitedProductListApiView.as_view(), name='limited-products'),
     path('banners/', BannersListApiView.as_view(), name='banners'),
-    path('sales/', SaleListApiView.as_view(), name='sales')
+    path('sales/', SaleListApiView.as_view(), name='sales'),
+    path('catalog/', CatalogFilterListApiView.as_view(), name='catalog')
 ]

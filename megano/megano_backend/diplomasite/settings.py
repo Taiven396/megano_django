@@ -66,6 +66,9 @@ INSTALLED_APPS = [
     'product_api',
     'basket_api',
     'orders_api',
+    'custom_index',
+    'django_select2',
+
 ]
 
 MIDDLEWARE = [
@@ -174,3 +177,5 @@ LOGGING = {
         },
     },
 }
+
+LOGIN_REDIRECT_URL = 'frontend:sign-in'

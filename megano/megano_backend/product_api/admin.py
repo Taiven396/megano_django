@@ -9,12 +9,15 @@ class ProductImagesAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ['id', 'product']
+    list_display = ['id', 'product', 'checked']
+    list_filter = ['checked']
 
 @admin.register(Specifications)
 class SpecificationsAdmin(admin.ModelAdmin):
     list_display = ['name', 'value']
+    search_fields = ['name']
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'description', 'sale', 'popular', 'limited', 'date']
+    list_display = ['id', 'title', 'description', 'sale', 'popular', 'limited', 'date']
+    autocomplete_fields = ['category', 'subcategory', 'tags', 'specifications']

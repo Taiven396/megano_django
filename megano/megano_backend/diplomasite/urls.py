@@ -22,14 +22,16 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('frontend.urls')),
+    path('', include(('frontend.urls', 'frontend'), namespace='frontend')),
     path('api/', include('auth_api.urls')),   
     path('api/', include('profile_api.urls')), 
     path('api/', include('catalog_api.urls')),
     path('api/', include('tags_api.urls')),
     path('api/', include('product_api.urls')),
     path('api/', include('basket_api.urls')),
-    path('api/', include('orders_api.urls'))
+    path('api/', include('orders_api.urls')),
+    path('', include('custom_index.urls')),
+    path('select2/', include('django_select2.urls'))
 ]
 
 if settings.DEBUG:

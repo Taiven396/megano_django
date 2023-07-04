@@ -36,6 +36,7 @@ class PopularProductSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
     
     class Meta:
         model = Product
@@ -44,7 +45,12 @@ class PopularProductSerializer(serializers.ModelSerializer):
             'count', 'date', 'title',
             'description', 'freeDelivery', 'images',
             'tags', 'reviews', 'rating']
-        
+
+    def get_price(self, obj):
+        if obj.sale:
+            return obj.salePrice
+        return obj.price
+
     def get_images(self, obj):
         return [{
             'src': image.image.url,
@@ -91,7 +97,7 @@ class LimitedProductSerializer(serializers.ModelSerializer):
             'src': image.image.url,
             'alt': image.image.name
         }
-             for image in obj.image.all()   
+             for image in obj.image.all()
                 ]
         
     def get_reviews(self, obj):
@@ -105,10 +111,8 @@ class LimitedProductSerializer(serializers.ModelSerializer):
         return 0
     
     def get_tags(self, obj):
-        tags = [ tag.name for tag in obj.tags.all()]
-        print(tags)
         return [
-            tag.name
+            {'name' : tag.name}
             for tag in obj.tags.all()
         ]
         
@@ -146,12 +150,11 @@ class BannersSerializer(serializers.ModelSerializer):
         return 0
     
     def get_tags(self, obj):
-        tags = [ tag.name for tag in obj.tags.all()]
-        print(tags)
         return [
-            tag.name
+            {'name' : tag.name,
+             'id': tag.id}
             for tag in obj.tags.all()
-        ]        
+        ]
 
 
 class SaleSerializer(serializers.ModelSerializer):   
@@ -163,7 +166,7 @@ class SaleSerializer(serializers.ModelSerializer):
             'id', 'price', 'salePrice', 
             'dateFrom', 'dateTo', 
             'title', 'images']
-        
+    
     def get_images(self, obj):
         return [{
             'src': image.image.url,

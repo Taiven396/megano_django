@@ -19,6 +19,7 @@ typing-extensions = "^4.6.3"
 urllib3 = "^2.0.3"
 diploma-frontend = {path = "diploma-frontend-0.6.tar.gz"}
 whitenoise = "^6.5.0"
+django-select2 = "^8.1.2"
 
 [tool.poetry.dev-dependencies]
 

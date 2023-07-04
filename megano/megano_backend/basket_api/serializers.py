@@ -8,6 +8,7 @@ class BasketSerializer(serializers.ModelSerializer):
     reviews = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
     count = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
     
     class Meta:
         model = Product
@@ -24,6 +25,11 @@ class BasketSerializer(serializers.ModelSerializer):
             if next(iter(i.values())) == obj.id:
                 return count
             
+    def get_price(self, obj):
+        if obj.sale:
+            return obj.salePrice
+        return obj.price
+    
     def get_images(self, obj):
         return [{
             'src': image.image.url,

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from profile_api.models import Profile
+from orders_api.models import Order
 from .serializers import UserSerializer, LogInSerializer
 from typing import Dict, List
 import datetime
@@ -21,28 +22,23 @@ class SignInApiView(APIView):
     (username, password). Проверяет данные с помощью
     сериализатора, при успешной проверке,
     выполняет вход (login).
-    
-    Поля запроса:
-    username: str Логин пользователя (обязательное поле)
-    password: sty Пароль пользователя (обязательное поле)
-    
-    Возвращает:
-    Response(status)
-    500: Невалидность данных
-    200: Успешный вход в систему
     """
     
     def post(self, request):
-        data = json.loads(request.body)
-        serialize = LogInSerializer(data=data)
-        user = User.objects.get(username=data['username'])
-        if serialize.is_valid():
-            login(
-            user=user,
-            request=request
-            )
-            return Response(status=200)
-        return Response(status=500)
+        try:
+            data = json.loads(request.body)
+            user = User.objects.get(username=data['username'])
+            serialize = LogInSerializer(data=data)
+            if serialize.is_valid():
+                print('asd')
+                login(user=user, request=request)
+                if request.session.get('orderId'):
+                    order = Order.objects.get(id=request.session['orderId'])
+                    order.customer = user
+                    order.save()
+                return Response(status=200)
+        except:
+            return Response(status=409)
     
 
 class SignOutApi(APIView):
@@ -50,15 +46,11 @@ class SignOutApi(APIView):
     API представление для выхода из системы.
     Принимает POST запрос для выхода из системы.
     Выполняет (logout).
-    
-    Возвращает:
-    Response(status)
-    200: Успешный выход из системы
     """
     
     def post(self, request):
         logger_info.info(f'Пользователь {request.user.username} успешно'
-                         'вышел из системы. {datetime.datetime.now()}')
+                         f'вышел из системы. {datetime.datetime.now()}')
         logout(
             request=request
         )
@@ -72,17 +64,6 @@ class SignUpCreateApiView(CreateAPIView):
     и уникальность username, если проверка успешна
     создает нового User (регестрирует) и выполняет
     login
-    
-    Ожидаемые поля из запроса:
-    name: str Имя пользователя
-    username: str Логин пользователя
-    password: str Пароль пользователя
-    
-    Возвращает:
-    Response(status)
-    409: Пользователь с таким username уже
-    существует, либо невалидность данных
-    200: Успешная регистрация
     """
     serializer_class = UserSerializer
     
@@ -94,9 +75,10 @@ class SignUpCreateApiView(CreateAPIView):
             user = serializer.save()
             if user is None:
                 return Response(status=409)
-            login(
-                user=user,
-                request=request
-            )
+            login(user=user, request=request)
+            if request.session.get('orderId'):
+                order = Order.objects.get(id=request.session['orderId'])
+                order.customer = user
+                order.save() 
             return Response(status=200)
         return Response(status=409)

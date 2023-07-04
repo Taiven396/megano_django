@@ -9,6 +9,7 @@ class ProductSerializer(serializers.ModelSerializer):
     specifications = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
     
     class Meta:
         model = Product
@@ -17,7 +18,11 @@ class ProductSerializer(serializers.ModelSerializer):
                   'fullDescription', 'freeDelivery', 'images', 
                   'tags', 'reviews', 'specifications', 'rating']
         
-        
+    def get_price(self, obj):
+        if obj.sale:
+            return obj.salePrice
+        return obj.price
+
     def get_images(self, obj):
         return [{
             'src': image.image.url,
@@ -27,10 +32,9 @@ class ProductSerializer(serializers.ModelSerializer):
                 ]
     
     def get_tags(self, obj):
-        tags = [ tag.name for tag in obj.tags.all()]
-        print(tags)
         return [
-            tag.name
+            {'name' : tag.name,
+             'id': tag.id}
             for tag in obj.tags.all()
         ]
     
@@ -55,10 +59,11 @@ class ProductSerializer(serializers.ModelSerializer):
                 'date': review.date
             }
             for review in obj.reviews.all()
+            if review.checked
         ]
         
     def get_rating(self, obj):
-        rate_points = [ review.rate for review in Review.objects.filter(product=obj).all()]
+        rate_points = [ review.rate for review in Review.objects.filter(product=obj)]
         if len(rate_points) > 0:
             rating = sum(rate_points) / len(rate_points)
             return rating

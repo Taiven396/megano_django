@@ -37,10 +37,23 @@ class Product(models.Model):
     specifications = models.ForeignKey(Specifications, on_delete=models.PROTECT, null=True, blank=True, related_name='specifications')
     dateFrom = models.CharField(max_length=12, blank=True, null=True)
     dateTo = models.CharField(max_length=12, blank=True, null=True)
+    rating = models.FloatField(default = 0)
     
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+        
+    def update_rating(self):
+        rate_points = [ review.rate for review in Review.objects.filter(product=self).all()]
+        if len(rate_points) > 0:
+            rating = sum(rate_points) / len(rate_points)
+            self.rating = rating
+        else:
+            self.rating = 0
+        
+    def save(self, *args, **kwargs):
+        self.update_rating()
+        super().save(*args, **kwargs)
         
     def __str__(self):
         return self.title
@@ -52,7 +65,7 @@ class ProductImages(models.Model):
     
     class Meta:
         verbose_name = 'Изображение продукта'
-        verbose_name_plural = 'Изображения продуктоа'
+        verbose_name_plural = 'Изображения продуктов'
     
     def __str__(self):
         return str(self.id)    
@@ -63,7 +76,9 @@ class Review(models.Model):
     text = models.TextField()
     rate = models.PositiveIntegerField(choices=rate_list)
     date = models.DateTimeField(auto_now_add=True)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, blank=True, related_name='reviews')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT,
+                                null=True, blank=True, related_name='reviews')
+    checked = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = 'Отзыв'

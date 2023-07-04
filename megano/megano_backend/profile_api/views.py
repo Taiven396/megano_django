@@ -35,7 +35,14 @@ class ProfileRetrievUpdateView(RetrieveUpdateAPIView):
         """
         Обновляет Profile пользователя
         """
-        return super().update(request, *args, **kwargs)
+        print(request.data)
+        data = request.data
+        serializer = ProfileSerializer(data=data)
+        if serializer.is_valid():
+            return super().update(request, *args, **kwargs)
+        print('Не валидный')
+        data = {'error': 'Невалидные данные'}
+        return Response(status=409, data=data)
     
 
 class ProfileAvatarUpdateView(UpdateAPIView):

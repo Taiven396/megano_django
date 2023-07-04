@@ -1,8 +1,7 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from product_api.models import Product
-from .serializers import BasketSerializer    
-    
+from .serializers import BasketSerializer
     
 class BasketApiView(ListAPIView):
     serializer_class = BasketSerializer
