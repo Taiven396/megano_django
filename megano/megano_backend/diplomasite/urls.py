@@ -18,17 +18,25 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="API Documentation",
+        default_version="v1",
+        description="API documentation for megano project",
+        contact=openapi.Contact(email="Mezentsev0904@gmail.com"),
+    ),
+    public=True,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(('frontend.urls', 'frontend'), namespace='frontend')),
-    path('api/', include('auth_api.urls')),   
-    path('api/', include('profile_api.urls')), 
-    path('api/', include('catalog_api.urls')),
-    path('api/', include('tags_api.urls')),
+    path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+    path('', include('frontend.urls')),
+    path('api/', include('auth_api.urls')),
     path('api/', include('product_api.urls')),
-    path('api/', include('basket_api.urls')),
     path('api/', include('orders_api.urls')),
     path('', include('custom_index.urls')),
     path('select2/', include('django_select2.urls'))

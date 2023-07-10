@@ -1,28 +1,71 @@
 from django.db import models
-from catalog_api.models import Category, Subcategory
-from tags_api.models import Tags
 from django.contrib.auth.models import User
 
+
+def category_photo_path(instanse, filename):
+    return f'category/{instanse.title}/{filename}'
+
+
+def subcategory_photo_path(instanse, filename):
+    return f'subcategory/{instanse.title}/{filename}'
+
+
+class Category(models.Model):
+    title = models.CharField(max_length=200)
+    images = models.ImageField(upload_to=category_photo_path)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+
+class Subcategory(models.Model):
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to=subcategory_photo_path)
+    parent = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='subcategories')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Подкатегория'
+        verbose_name_plural = 'Подкатегории'
+
 def upload_path_images(instanse, filename):
-    return f'products_images/product{instanse.id}/{filename}'
+    return f'products_images/product{instanse.product.id}/{filename}'
+
+class Tags(models.Model):
+    name = models.CharField(max_length=128)
+
+    class Meta:
+        verbose_name = 'Тэг'
+        verbose_name_plural = 'Тэги'
+
+    def __str__(self):
+        return self.name
+
 
 
 class Specifications(models.Model):
     name = models.CharField(max_length=200)
     value = models.CharField(max_length=300)
-    
+    product = models.CharField(max_length=256)
+
     class Meta:
         verbose_name = 'Спецификация'
         verbose_name_plural = 'Спецификации'
-        
+
     def __str__(self):
-        return self.name
+        return self.product + ' ' + self.name
     
     
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.PROTECT)
-    tags = models.ManyToManyField(Tags, blank=True)    
+    tags = models.ManyToManyField(Tags, blank=True)
     popular = models.BooleanField(default=False)
     sale = models.BooleanField(default=False)
     limited = models.BooleanField(default=False)
@@ -34,7 +77,7 @@ class Product(models.Model):
     title = models.CharField(max_length=200)
     count = models.PositiveIntegerField(blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
-    specifications = models.ForeignKey(Specifications, on_delete=models.PROTECT, null=True, blank=True, related_name='specifications')
+    specifications = models.ManyToManyField(Specifications, blank=True, related_name='specifications')
     dateFrom = models.CharField(max_length=12, blank=True, null=True)
     dateTo = models.CharField(max_length=12, blank=True, null=True)
     rating = models.FloatField(default = 0)

@@ -1,4 +1,4 @@
-{% extends 'history_order/base.html' %}
+{% extends 'custom_index/custom-base.html' %}
 {% load static %}
 
 <html lang="ru">
@@ -131,7 +131,7 @@
                 $(document).ready(function() {
                     $('#id_title').select2({
                         ajax: {
-                            url: "{% url 'history_order:product-autocomplete' %}",
+                            url: "{% url 'custom_index:product-autocomplete' %}",
                             dataType: 'json'
                         }
                     });

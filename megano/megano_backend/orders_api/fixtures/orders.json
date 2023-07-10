@@ -1,0 +1,149 @@
+[
+  {
+    "model": "orders_api.order",
+    "pk": 1,
+    "fields": {
+      "createdAt": "2023-07-07T12:44:21.960Z",
+      "customer": 2,
+      "deliveryType": "ordinary",
+      "paymentType": "someone",
+      "totalCost": "950.00",
+      "status": "created",
+      "city": "Москва",
+      "address": "Полярников 6"
+    }
+  },
+  {
+    "model": "orders_api.order",
+    "pk": 2,
+    "fields": {
+      "createdAt": "2023-07-07T12:48:32.891Z",
+      "customer": 4,
+      "deliveryType": "ordinary",
+      "paymentType": "someone",
+      "totalCost": "400.00",
+      "status": "created",
+      "city": "Новосибирск",
+      "address": "Заречная 8"
+    }
+  },
+  {
+    "model": "orders_api.order",
+    "pk": 3,
+    "fields": {
+      "createdAt": "2023-07-07T12:50:18.130Z",
+      "customer": 3,
+      "deliveryType": "",
+      "paymentType": "",
+      "totalCost": "140.00",
+      "status": "",
+      "city": "",
+      "address": ""
+    }
+  },
+  {
+    "model": "orders_api.order",
+    "pk": 4,
+    "fields": {
+      "createdAt": "2023-07-07T12:51:15.646Z",
+      "customer": 3,
+      "deliveryType": "",
+      "paymentType": "",
+      "totalCost": "70.00",
+      "status": "",
+      "city": "",
+      "address": ""
+    }
+  },
+  {
+    "model": "orders_api.order",
+    "pk": 5,
+    "fields": {
+      "createdAt": "2023-07-07T13:07:51.881Z",
+      "customer": 4,
+      "deliveryType": "express",
+      "paymentType": "someone",
+      "totalCost": "500.00",
+      "status": "created",
+      "city": "Спб",
+      "address": "Невский 121"
+    }
+  },
+  {
+    "model": "orders_api.order",
+    "pk": 6,
+    "fields": {
+      "createdAt": "2023-07-07T17:10:06.274Z",
+      "customer": 9,
+      "deliveryType": "ordinary",
+      "paymentType": "someone",
+      "totalCost": "340.00",
+      "status": "created",
+      "city": "Санкт-Петербург",
+      "address": "Комендантский 23"
+    }
+  },
+  {
+    "model": "orders_api.orderproduct",
+    "pk": 1,
+    "fields": {
+      "product": 6,
+      "count": 1,
+      "order": 1
+    }
+  },
+  {
+    "model": "orders_api.orderproduct",
+    "pk": 2,
+    "fields": {
+      "product": 8,
+      "count": 1,
+      "order": 1
+    }
+  },
+  {
+    "model": "orders_api.orderproduct",
+    "pk": 3,
+    "fields": {
+      "product": 10,
+      "count": 1,
+      "order": 2
+    }
+  },
+  {
+    "model": "orders_api.orderproduct",
+    "pk": 4,
+    "fields": {
+      "product": 7,
+      "count": 1,
+      "order": 3
+    }
+  },
+  {
+    "model": "orders_api.orderproduct",
+    "pk": 5,
+    "fields": {
+      "product": 3,
+      "count": 1,
+      "order": 4
+    }
+  },
+  {
+    "model": "orders_api.orderproduct",
+    "pk": 6,
+    "fields": {
+      "product": 12,
+      "count": 1,
+      "order": 5
+    }
+  },
+  {
+    "model": "orders_api.orderproduct",
+    "pk": 7,
+    "fields": {
+      "product": 17,
+      "count": 1,
+      "order": 6
+    }
+  }
+]

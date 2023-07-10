@@ -1,7 +1,59 @@
 from rest_framework import serializers
-from .models import Product, Review
-from tags_api.models import Tags
+from .models import Category, Subcategory, Product, Review, Tags
 
+
+class SubcategorySerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Subcategory
+        fields = ['id', 'title', 'image']
+
+    def get_image(self, obj):
+        return {
+            'src': obj.image.url,
+            'alt': obj.image.name,
+        }
+
+
+class CatalogSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+    subcategories = SubcategorySerializer(many=True)
+
+    class Meta:
+        model = Category
+        fields = ['id', 'title', 'image', 'subcategories']
+
+    def get_image(self, obj):
+        return {
+            'src': obj.images.url,
+            'alt': obj.images.name,
+        }
+
+
+class SaleSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = [
+            'id', 'price', 'salePrice',
+            'dateFrom', 'dateTo',
+            'title', 'images']
+
+    def get_images(self, obj):
+        return [{
+            'src': image.image.url,
+            'alt': image.image.name
+        }
+            for image in obj.image.all()
+        ]
+
+
+class TagsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Tags
+        fields = ['id', 'name']
 
 class ProductSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
@@ -13,7 +65,8 @@ class ProductSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Product
-        fields = ['id', 'category', 'price', 
+        fields = ['id', 'category', 'price', 'salePrice',
+                  'dateFrom', 'dateTo',
                   'count', 'date', 'title', 'description', 
                   'fullDescription', 'freeDelivery', 'images', 
                   'tags', 'reviews', 'specifications', 'rating']
@@ -39,13 +92,14 @@ class ProductSerializer(serializers.ModelSerializer):
         ]
     
     def get_specifications(self, obj):
-        specification = obj.specifications
-        if specification:
+        specifications = obj.specifications.all()
+        if specifications:
             return [
                 {
                     'name': specification.name,
                     'value': specification.value
                 }
+                for specification in specifications
             ]
         return []
         

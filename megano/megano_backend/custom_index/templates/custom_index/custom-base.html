@@ -142,9 +142,10 @@
         </div>
         <div class="Header-searchLink"><img src="{% static 'frontend/assets/img/icons/search.svg' %}" alt="search.svg"/>
         </div>
+          {% block search %}
         <div class="Header-search">
           <div class="search">
-            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+             <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
             <form class="form form_search" method="post" >
               {% csrf_token %}
@@ -167,6 +168,7 @@
     </script>
           </div>
         </div>
+          {% endblock %}
       </div>
     </div>
   </header>
