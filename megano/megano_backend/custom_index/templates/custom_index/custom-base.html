@@ -6,6 +6,8 @@
   <meta name="description" content="Описание страницы">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
   <link href="{% static 'frontend/favicon.ico' %}" rel="shortcut icon">
   <link href="{% static 'frontend/assets/fonts/Roboto/Roboto-Regular.woff' %}" as="font">
   <link href="{% static 'frontend/assets/fonts/Roboto/Roboto-Italic.woff' %}" as="font">
@@ -18,11 +20,11 @@
   <link rel="stylesheet" href="{% static 'frontend/assets/css/extra.css' %}">
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<!--  <script src="{% static 'frontend/assets/plg/vue.global.js' %}"></script>-->
+<script src="{% static 'frontend/assets/plg/vue.global.js' %}"></script>
   <script src="{% static 'frontend/assets/plg/CountDown/countdown.js' %}"></script>
 
   <script defer src="{% static 'frontend/assets/js/app.js' %}"></script>
-  <script defer src="{% static 'frontend/assets/plg/jQuery/jquery-3.5.0.slim.min.js' %}"></script>
+<!--  <script defer src="{% static 'frontend/assets/plg/jQuery/jquery-3.5.0.slim.min.js' %}"></script>-->
   <script defer src="{% static 'frontend/assets/plg/form/jquery.form.js' %}"></script>
   <script defer src="{% static 'frontend/assets/plg/form/jquery.maskedinput.min.js' %}"></script>
   <script defer src="{% static 'frontend/assets/plg/range/ion.rangeSlider.min.js' %}"></script>
@@ -142,18 +144,200 @@
         </div>
         <div class="Header-search">
           <div class="search">
-            <form class="form form_search"  @submit.prevent="search">
-              <input class="search-input" id="query" name="query" type="text" v-model="searchText" placeholder="What arыфвe you log for ..."/>
-              <button class="search-button" type="submit" name="search" id="search"><img src="{% static 'frontend/assets/img/icons/search.svg' %}" alt="search.svg"/>Search
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+            <form class="form form_search" method="post" >
+              {% csrf_token %}
+              {{product_form.title}}
+              <button class="search-button" type="submit" ><img src="{% static 'frontend/assets/img/icons/search.svg' %}" alt="search.svg"/>Search
               </button>
+
             </form>
+                <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+                <script>
+                $(document).ready(function() {
+                    $('#id_title').select2({
+                        ajax: {
+                            url: "{% url 'custom_index:product-autocomplete' %}",
+                            dataType: 'json'
+                        }
+                    });
+                });
+    </script>
           </div>
         </div>
       </div>
     </div>
   </header>
 
-  {% block content %}{% endblock %}
+{% block content %}
+      <div class="Middle">
+    <div class="Section">
+      <div class="wrap">
+        <div class="BannersHome">
+          <!-- Получаем баннеры -->
+          <a v-for="(banner, index) in banners"
+               :key="index"
+               class="BannersHomeBlock"
+               :href="`/catalog/${banner.category}`">
+            <div class="BannersHomeBlock-row">
+              <div class="BannersHomeBlock-block">
+                <strong class="BannersHomeBlock-title">${ banner.title }$
+                </strong>
+                <div class="BannersHomeBlock-content">from &#32;<span class="BannersHomeBlock-price">$ ${ banner.price }$</span>
+                </div>
+              </div>
+              <div class="BannersHomeBlock-block" v-if="banner.images.length > 0">
+                <div class="BannersHomeBlock-img"><img :src="banner.images[0].src" :alt="banner.images[0].alt"/>
+                </div>
+              </div>
+            </div>
+          </a>
+          <!-- Получаем баннеры -->
+
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnDesktop"  >
+      <div class="wrap">
+        <div class="Section-content">
+          <header class="Section-header">
+            <h2 class="Section-title">Popular Products
+            </h2>
+          </header>
+          <div class="Cards">
+
+            <!-- Получаем популярные товары -->
+            <div v-for="card in popularCards" class="Card">
+              <a class="Card-picture" :href="`/product/${card.id}`">
+                <img v-if="card.images.length > 0" :src="card.images[0].src" :alt="card.images[0].alt"/></a>
+              <div class="Card-content">
+                <strong class="Card-title"><a :href="`/product/${card.id}`">${ card.title }$</a>
+                </strong>
+                <div class="Card-description">
+                  <div class="Card-cost"><span class="Card-price">$${ card.price }$</span>
+                  </div>
+                  <div class="Card-hover"><a class="Card-btn" :href="`/product/${card.id}`">
+                    <img src="{% static 'frontend/assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Получаем популярные товары -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="Section Section_column Section_columnRight">
+      <div class="wrap">
+        <div class="Section-column">
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_advantage">
+              <div class="media-image"><img src="{% static 'frontend/assets/img/icons/advantages/shipping.svg' %}" alt="shipping.svg"/>
+              </div>
+              <div class="media-content">
+                <strong class="media-title">Shipping & Returns
+                </strong>
+                <p class="media-text">World wide shipping
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_advantage">
+              <div class="media-image"><img src="{% static 'frontend/assets/img/icons/advantages/moneyBack.svg' %}" alt="moneyBack.svg"/>
+              </div>
+              <div class="media-content">
+                <strong class="media-title">Money Back
+                </strong>
+                <p class="media-text">Guaranted payments
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_advantage">
+              <div class="media-image"><img src="{% static 'frontend/assets/img/icons/advantages/support.svg' %}" alt="support.svg"/>
+              </div>
+              <div class="media-content">
+                <strong class="media-title">Support Policy
+                </strong>
+                <p class="media-text">Fast support team
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="Section-columnSection Section-columnSection_mark">
+            <div class="media media_advantage">
+              <div class="media-image"><img src="{% static 'frontend/assets/img/icons/advantages/quality.svg' %}" alt="quality.svg"/>
+              </div>
+              <div class="media-content">
+                <strong class="media-title">Quality Guarantee
+                </strong>
+                <p class="media-text">Best guaranted items
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="Section-content">
+          <div class="Slider Slider_carousel">
+            <header class="Section-header Section-header_close">
+              <h2 class="Section-title">Limited edition
+              </h2>
+              <div class="Section-control">
+                <div class="Slider-navigate">
+                </div>
+              </div>
+            </header>
+<!--            <div class="Slider-box Cards">-->
+              <!-- Получаем список товаров ограниченной коллекции -->
+<!--              <div v-for="card in limitedCards" class="Slider-item">-->
+<!--                <div class="Slider-content">-->
+<!--                  <div class="Card"><a class="Card-picture" :href="card.href">-->
+<!--                    <img v-if="card.images.length > 0" :src="card.images[0]" :alt="card.title"/></a>-->
+<!--                    <div class="Card-content">-->
+<!--                      <strong class="Card-title"><a :href="card.href">${ card.title }$</a>-->
+<!--                      </strong>-->
+<!--                      <div class="Card-description">-->
+<!--                        <div class="Card-cost"><span class="Card-price">$${ card.price }$</span>-->
+<!--                        </div>-->
+<!--                        <div class="Card-hover"><a class="Card-btn" href="#"><img src="{% static 'frontend/assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+              <!-- Получаем список товаров ограниченной коллекции -->
+            <div class="Cards">
+              <div v-for="card in limitedCards" class="Card">
+                <a class="Card-picture" :href="`/product/${card.id}`">
+                  <img v-if="card.images.length > 0" :src="card.images[0].src" :alt="card.images[0].alt"/></a>
+                <div class="Card-content">
+                  <strong class="Card-title"><a :href="`/product/${card.id}`">${ card.title }$</a>
+                  </strong>
+                  <div class="Card-description">
+                    <div class="Card-cost"><span class="Card-price">$${ card.price }$</span>
+                    </div>
+                    <div class="Card-hover"><a class="Card-btn" href="#">
+                      <img src="{% static 'frontend/assets/img/icons/card/cart.svg' %}" alt="cart.svg"/></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+
 
   <footer class="Footer">
     <div class="wrap">
@@ -236,6 +420,8 @@
     </div>
   </footer>
 
-  {% block mixins %}{% endblock %}
+  {% block mixins %}
+<script src="{% static 'frontend/assets/js/index.js' %}"></script>
+{% endblock %}
 </body>
 </html>
