@@ -24,7 +24,7 @@ var mix = {
 				this.year = ''
 				this.month = ''
 				this.code = ''
-				location.assign('/')
+				location.assign('/progress-payment')
 			}).catch(() => {
 			 	console.warn('Ошибка при оплате')
 			})

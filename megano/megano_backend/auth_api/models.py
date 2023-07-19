@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 def avatar_upload_path(instanse, filename):
-    return f'avatars/user_{instanse.user.id}/{filename}'
+    return f"avatars/user_{instanse.user.id}/{filename}"
 
 
 class Profile(models.Model):
@@ -14,8 +14,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = 'Профиль'
-        verbose_name_plural = 'Профили'
+        verbose_name = "Профиль"
+        verbose_name_plural = "Профили"
 
     def __str__(self):
         return self.user.username

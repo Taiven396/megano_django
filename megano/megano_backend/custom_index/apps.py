@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class CustomIndexConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'custom_index'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "custom_index"

@@ -6,44 +6,104 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('product_api', '0001_initial'),
+        ("product_api", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('createdAt', models.DateTimeField(auto_now_add=True)),
-                ('deliveryType', models.CharField(choices=[('express', 'Express'), ('ordinary', 'Ordinary')], max_length=50)),
-                ('paymentType', models.CharField(choices=[('online', 'Online'), ('someone', 'Someone')], max_length=50)),
-                ('totalCost', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('status', models.CharField(choices=[('accepted', 'Accepted'), ('processing', 'Processing'), ('cancelled', 'Cancelled'), ('completed', 'Completed'), ('created', 'Created')], max_length=50)),
-                ('city', models.CharField(max_length=128)),
-                ('address', models.CharField(max_length=256)),
-                ('customer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("createdAt", models.DateTimeField(auto_now_add=True)),
+                (
+                    "deliveryType",
+                    models.CharField(
+                        choices=[("express", "Express"), ("ordinary", "Ordinary")],
+                        max_length=50,
+                    ),
+                ),
+                (
+                    "paymentType",
+                    models.CharField(
+                        choices=[("online", "Online"), ("someone", "Someone")],
+                        max_length=50,
+                    ),
+                ),
+                ("totalCost", models.DecimalField(decimal_places=2, max_digits=12)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("accepted", "Accepted"),
+                            ("processing", "Processing"),
+                            ("cancelled", "Cancelled"),
+                            ("completed", "Completed"),
+                            ("created", "Created"),
+                        ],
+                        max_length=50,
+                    ),
+                ),
+                ("city", models.CharField(max_length=128)),
+                ("address", models.CharField(max_length=256)),
+                (
+                    "customer",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Заказ',
-                'verbose_name_plural': 'Заказы',
+                "verbose_name": "Заказ",
+                "verbose_name_plural": "Заказы",
             },
         ),
         migrations.CreateModel(
-            name='OrderProduct',
+            name="OrderProduct",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('count', models.PositiveIntegerField()),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='products_in_order', to='frontend.order')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='product', to='product_api.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("count", models.PositiveIntegerField()),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="products_in_order",
+                        to="frontend.order",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="product",
+                        to="product_api.product",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Продукт в заказе',
-                'verbose_name_plural': 'Продукты в заказе',
+                "verbose_name": "Продукт в заказе",
+                "verbose_name_plural": "Продукты в заказе",
             },
         ),
     ]

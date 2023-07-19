@@ -7,7 +7,6 @@ import product_api.models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -16,119 +15,235 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('images', models.ImageField(upload_to=product_api.models.category_photo_path)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                (
+                    "images",
+                    models.ImageField(upload_to=product_api.models.category_photo_path),
+                ),
             ],
             options={
-                'verbose_name': 'Категория',
-                'verbose_name_plural': 'Категории',
+                "verbose_name": "Категория",
+                "verbose_name_plural": "Категории",
             },
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('popular', models.BooleanField(default=False)),
-                ('sale', models.BooleanField(default=False)),
-                ('limited', models.BooleanField(default=False)),
-                ('description', models.CharField(max_length=200)),
-                ('fullDescription', models.TextField()),
-                ('salePrice', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('freeDelivery', models.BooleanField(default=False)),
-                ('title', models.CharField(max_length=200)),
-                ('count', models.PositiveIntegerField(blank=True, null=True)),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('dateFrom', models.CharField(blank=True, max_length=12, null=True)),
-                ('dateTo', models.CharField(blank=True, max_length=12, null=True)),
-                ('rating', models.FloatField(default=0)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='product_api.category')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("popular", models.BooleanField(default=False)),
+                ("sale", models.BooleanField(default=False)),
+                ("limited", models.BooleanField(default=False)),
+                ("description", models.CharField(max_length=200)),
+                ("fullDescription", models.TextField()),
+                ("salePrice", models.DecimalField(decimal_places=2, max_digits=12)),
+                ("price", models.DecimalField(decimal_places=2, max_digits=12)),
+                ("freeDelivery", models.BooleanField(default=False)),
+                ("title", models.CharField(max_length=200)),
+                ("count", models.PositiveIntegerField(blank=True, null=True)),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                ("dateFrom", models.CharField(blank=True, max_length=12, null=True)),
+                ("dateTo", models.CharField(blank=True, max_length=12, null=True)),
+                ("rating", models.FloatField(default=0)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="product_api.category",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Продукт',
-                'verbose_name_plural': 'Продукты',
+                "verbose_name": "Продукт",
+                "verbose_name_plural": "Продукты",
             },
         ),
         migrations.CreateModel(
-            name='Specifications',
+            name="Specifications",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('value', models.CharField(max_length=300)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                ("value", models.CharField(max_length=300)),
             ],
             options={
-                'verbose_name': 'Спецификация',
-                'verbose_name_plural': 'Спецификации',
+                "verbose_name": "Спецификация",
+                "verbose_name_plural": "Спецификации",
             },
         ),
         migrations.CreateModel(
-            name='Tags',
+            name="Tags",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=128)),
             ],
             options={
-                'verbose_name': 'Тэг',
-                'verbose_name_plural': 'Тэги',
+                "verbose_name": "Тэг",
+                "verbose_name_plural": "Тэги",
             },
         ),
         migrations.CreateModel(
-            name='Subcategory',
+            name="Subcategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('image', models.ImageField(upload_to=product_api.models.subcategory_photo_path)),
-                ('parent', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='subcategories', to='product_api.category')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                (
+                    "image",
+                    models.ImageField(
+                        upload_to=product_api.models.subcategory_photo_path
+                    ),
+                ),
+                (
+                    "parent",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="subcategories",
+                        to="product_api.category",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Подкатегория',
-                'verbose_name_plural': 'Подкатегории',
+                "verbose_name": "Подкатегория",
+                "verbose_name_plural": "Подкатегории",
             },
         ),
         migrations.CreateModel(
-            name='Review',
+            name="Review",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.TextField()),
-                ('rate', models.PositiveIntegerField(choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)])),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('checked', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('product', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='reviews', to='product_api.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("text", models.TextField()),
+                (
+                    "rate",
+                    models.PositiveIntegerField(
+                        choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
+                    ),
+                ),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                ("checked", models.BooleanField(default=False)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="reviews",
+                        to="product_api.product",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Отзыв',
-                'verbose_name_plural': 'Отзывы',
+                "verbose_name": "Отзыв",
+                "verbose_name_plural": "Отзывы",
             },
         ),
         migrations.CreateModel(
-            name='ProductImages',
+            name="ProductImages",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to=product_api.models.upload_path_images)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='image', to='product_api.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "image",
+                    models.ImageField(upload_to=product_api.models.upload_path_images),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="image",
+                        to="product_api.product",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Изображение продукта',
-                'verbose_name_plural': 'Изображения продуктов',
+                "verbose_name": "Изображение продукта",
+                "verbose_name_plural": "Изображения продуктов",
             },
         ),
         migrations.AddField(
-            model_name='product',
-            name='specifications',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='specifications', to='product_api.specifications'),
+            model_name="product",
+            name="specifications",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="specifications",
+                to="product_api.specifications",
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='subcategory',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='product_api.subcategory'),
+            model_name="product",
+            name="subcategory",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                to="product_api.subcategory",
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='tags',
-            field=models.ManyToManyField(blank=True, to='product_api.tags'),
+            model_name="product",
+            name="tags",
+            field=models.ManyToManyField(blank=True, to="product_api.tags"),
         ),
     ]

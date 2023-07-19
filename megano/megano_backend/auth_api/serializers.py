@@ -7,7 +7,7 @@ import datetime
 import logging
 
 
-logger_info = logging.getLogger('info_log')
+logger_info = logging.getLogger("info_log")
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -15,21 +15,18 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['fullName', 'email', 'phone', 'avatar']
+        fields = ["fullName", "email", "phone", "avatar"]
 
     def get_avatar(self, obj):
         if obj.avatar:
-            return {
-                'src': obj.avatar.url,
-                'alt': obj.avatar.name
-            }
+            return {"src": obj.avatar.url, "alt": obj.avatar.name}
         return None
 
 
 class ProfileAvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['avatar']
+        fields = ["avatar"]
 
 
 class PasswordSerializer(serializers.Serializer):
@@ -38,60 +35,56 @@ class PasswordSerializer(serializers.Serializer):
     currentPassword = serializers.CharField()
 
     def validate(self, data):
-        username = data.get('username')
-        old_password = data.get('currentPassword')
-        new_password = data.get('newPassword')
+        username = data.get("username")
+        old_password = data.get("currentPassword")
+        new_password = data.get("newPassword")
         user = authenticate(username=username, password=old_password)
         print(user)
         if user is None:
             raise serializers.ValidationError()
         user.set_password(new_password)
-        logger_info.info(f'Пользователь {user.username} успешно сменил пароль.')
+        logger_info.info(f"Пользователь {user.username} успешно сменил пароль.")
         user.save()
         return data
 
-class UserSerializer(serializers.ModelSerializer):
 
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'password', 'first_name']
-    
+        fields = ["username", "password", "first_name", "email"]
+
     def create(self, validated_data):
-        username = validated_data['username']
-        password = validated_data['password']
-        name = validated_data['first_name']
+        username = validated_data["username"]
+        password = validated_data["password"]
+        name = validated_data["first_name"]
+        email = validated_data["email"]
         try:
-            User.objects.get(
-                username=username
-            )
+            User.objects.get(username=username)
             return False
         except User.DoesNotExist:
             user = User.objects.create(
-                username=username,
-                first_name=name,
+                username=username, first_name=name, is_active=False
             )
             user.set_password(password)
             user.save()
-            logger_info.info(f'Пользователь {user.username} успешно зарегестрировался в системе.')
-            Profile.objects.create(
-                user=user
-                )
+            logger_info.info(
+                f"Пользователь {user.username} успешно зарегестрировался в системе."
+            )
+            Profile.objects.create(user=user, email=email, fullName=name)
             return user
 
 
 class LogInSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
-    
+
     def validate(self, data):
-        username = data['username']
-        password = data['password']
-        user = authenticate(
-            username=username,
-            password=password
-        )
+        username = data["username"]
+        password = data["password"]
+        user = authenticate(username=username, password=password)
         if user is None:
             raise serializers.ValidationError()
-        logger_info.info(f'Пользователь {user.username} успешно зашёл в систему. {datetime.datetime.now()}')
+        logger_info.info(
+            f"Пользователь {user.username} успешно зашёл в систему. {datetime.datetime.now()}"
+        )
         return data
-

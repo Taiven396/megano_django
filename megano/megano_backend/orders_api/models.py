@@ -5,19 +5,19 @@ from product_api.models import Product
 
 class Order(models.Model):
     delivery_choices = (
-        ('express', 'Express'),
-        ('ordinary', 'Ordinary'),
+        ("Экспресс доставка", "Экспресс доставка"),
+        ("Обычная доставка", "Обычная доставка"),
     )
     payment_choices = (
-        ('online', 'Online'),
-        ('someone', 'Someone'),
+        ("Онлайн оплата", "Онлайн оплата"),
+        ("Оплата наличными", "Оплата наличными"),
     )
     status_choices = (
-    ('accepted', 'Accepted'),
-    ('processing', 'Processing'),
-    ('cancelled', 'Cancelled'),
-    ('completed', 'Completed'),
-    ('created', 'Created')
+        ("подтвержден", "Подтвержден"),
+        ("оплачен", "Оплачен"),
+        ("отменен", "Отменен"),
+        ("завершен", "Завершен"),
+        ("создан", "Создан"),
     )
     createdAt = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -27,23 +27,27 @@ class Order(models.Model):
     status = models.CharField(choices=status_choices, max_length=50)
     city = models.CharField(max_length=128)
     address = models.CharField(max_length=256)
-    
+
     class Meta:
-        verbose_name = 'Заказ'
-        verbose_name_plural = 'Заказы'
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
 
     def __str__(self):
         return str(self.id)
-    
+
 
 class OrderProduct(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="product"
+    )
     count = models.PositiveIntegerField()
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='products_in_order')
-    
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name="products_in_order"
+    )
+
     class Meta:
-        verbose_name = 'Продукт в заказе'
-        verbose_name_plural = 'Продукты в заказе'
-        
+        verbose_name = "Продукт в заказе"
+        verbose_name_plural = "Продукты в заказе"
+
     def __str__(self):
         return str(self.id)

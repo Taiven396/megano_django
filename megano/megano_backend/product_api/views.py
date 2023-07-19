@@ -18,9 +18,10 @@ class TagsListApiView(ListAPIView):
     serializer_class = TagsSerializers
     queryset = Tags.objects.all()
 
+
 class CategoryListApiView(ListAPIView):
     serializer_class = CatalogSerializer
-    queryset = Category.objects.prefetch_related('subcategories').all()
+    queryset = Category.objects.prefetch_related("subcategories").all()
 
 
 class PopularProductListApiView(ListAPIView):
@@ -35,8 +36,9 @@ class PopularProductListApiView(ListAPIView):
         Затем случайным образом выбирает 4 товара из набора.
         Возвращается набор случайно выбранных популярных товаров.
         """
-        queryset = Product.objects.prefetch_related(
-            'image', 'tags', 'reviews').filter(popular=True)
+        queryset = Product.objects.prefetch_related("image", "tags", "reviews").filter(
+            popular=True
+        )
         queryset = random.sample(list(queryset), 4)
         return queryset
 
@@ -47,6 +49,7 @@ class LimitedProductListApiView(ListAPIView):
     лимитированных товаров. Подгружает картинки,
     тэги и отзывы
     """
+
     serializer_class = ProductSerializer
 
     def get_queryset(self):
@@ -58,15 +61,15 @@ class LimitedProductListApiView(ListAPIView):
         Затем случайным образом выбирает 4 товара из набора.
         Возвращается набор случайно выбранных лимитированных товаров.
         """
-        queryset = Product.objects.prefetch_related(
-            'image', 'tags', 'reviews').filter(limited=True)
+        queryset = Product.objects.prefetch_related("image", "tags", "reviews").filter(
+            limited=True
+        )
         queryset = random.sample(list(queryset), 4)
         return queryset
 
 
 class BannersListApiView(ListAPIView):
     serializer_class = ProductSerializer
-
 
     def get_queryset(self):
         """
@@ -77,17 +80,23 @@ class BannersListApiView(ListAPIView):
         Затем случайным образом выбирает 4 товара из набора.
         Возвращается набор случайно выбранных лимитированных товаров.
         """
-        queryset = Product.objects.prefetch_related(
-            'image', 'tags', 'reviews').filter(limited=True)
+        queryset = Product.objects.prefetch_related("image", "tags", "reviews").filter(
+            limited=True
+        )
         queryset = random.sample(list(queryset), 2)
         return queryset
 
 
 class SaleListApiView(ListAPIView):
     serializer_class = SaleSerializer
-    queryset = Product.objects.prefetch_related(
-        'image').order_by('id').filter(sale=True)
+    queryset = (
+        Product.objects.prefetch_related("image").order_by("id").filter(sale=True)
+    )
     pagination_class = SalePagination
+
+
+class CatalogCategory(ListAPIView):
+    model = Category
 
 
 class CatalogFilterListApiView(ListAPIView):
@@ -100,38 +109,44 @@ class CatalogFilterListApiView(ListAPIView):
         Использует параметры для фильтрации и сортировки набора товаров.
         Возвращается отфильтрованный и отсортированный набор товаров.
         """
-        min_price = int(self.request.GET.get('filter[minPrice]'))
-        max_price = int(self.request.GET.get('filter[maxPrice]'))
-        sort = self.request.GET.get('sort')
-        sort_type = self.request.GET.get('sortType')
-        available = self.request.GET.get('filter[available]')
-        name = self.request.GET.get('filter[name]')
-        tags = self.request.GET.getlist('tags[]')
-        free_delivery = self.request.GET.get('filter[freeDelivery]')
-        queryset = Product.objects.prefetch_related('image', 'tags').all()
+        min_price = int(self.request.GET.get("filter[minPrice]"))
+        max_price = int(self.request.GET.get("filter[maxPrice]"))
+        sort = self.request.GET.get("sort")
+        sort_type = self.request.GET.get("sortType")
+        available = self.request.GET.get("filter[available]")
+        name = self.request.GET.get("filter[name]")
+        tags = self.request.GET.getlist("tags[]")
+        free_delivery = self.request.GET.get("filter[freeDelivery]")
+        queryset = Product.objects.prefetch_related("image", "tags").all()
         queryset = queryset.filter(Q(price__lte=max_price) & Q(price__gte=min_price))
-        if available == 'true':
+        if available == "true":
             queryset = queryset.filter(count__gt=0)
         else:
             queryset = queryset.filter(count__lte=0)
         if len(tags) > 0:
             queryset = queryset.filter(tags__in=tags)
-        if sort_type == 'dec':
+        if sort_type == "dec":
             queryset = queryset.order_by(sort)
-        elif sort_type == 'inc':
-            queryset = queryset.order_by('-'+sort)
-        if free_delivery == 'true':
+        elif sort_type == "inc":
+            queryset = queryset.order_by("-" + sort)
+        if free_delivery == "true":
             queryset = queryset.filter(freeDelivery=True)
         if len(name) > 0:
-            queryset = queryset.filter(title__contains=name)
-        queryset = queryset.distinct()
-        return queryset
+            queryset = queryset.filter(title__icontains=name)
+        unique = []
+        for product in queryset:
+            if product not in unique:
+                unique.append(product)
+        return unique
 
 
 class ProductListApiView(RetrieveAPIView):
     serializer_class = ProductSerializer
-    queryset = Product.objects.select_related(
-        'category').prefetch_related('tags', 'image', 'reviews', 'specifications').all()
+    queryset = (
+        Product.objects.select_related("category")
+        .prefetch_related("tags", "image", "reviews", "specifications")
+        .all()
+    )
 
     def post(self, request, *args, **kwargs):
         """
@@ -147,18 +162,21 @@ class ProductListApiView(RetrieveAPIView):
         Создает новый объект отзыва с указанными данными и сохраняет его.
         Возвращает объект Response со статусом 200 в случае успешного создания отзыва.
         """
-        product = Product.objects.get(id=kwargs['pk'])
+        product = Product.objects.get(id=kwargs["pk"])
         try:
-            user = User.objects.get(username=request.data['author'])
+            user = User.objects.get(username=request.data["author"])
         except User.DoesNotExist:
             return Response(status=409)
-        if user.username != request.user.username or user.profile.email != request.data['email']:
+        if (
+            user.username != request.user.username
+            or user.profile.email != request.data["email"]
+        ):
             return Response(status=409)
         Review.objects.create(
-            author = user,
-            text = request.data['text'],
-            rate = request.data['rate'],
-            product = product,
-            checked = False
+            author=user,
+            text=request.data["text"],
+            rate=request.data["rate"],
+            product=product,
+            checked=False,
         )
         return Response(status=200)

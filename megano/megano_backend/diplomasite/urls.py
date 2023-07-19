@@ -32,17 +32,19 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
-    path('', include('frontend.urls')),
-    path('api/', include('auth_api.urls')),
-    path('api/', include('product_api.urls')),
-    path('api/', include('orders_api.urls')),
-    path('', include('custom_index.urls')),
-    path('select2/', include('django_select2.urls'))
+    path("admin/", admin.site.urls),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("", include("frontend.urls")),
+    path("api/", include("auth_api.urls")),
+    path("api/", include("product_api.urls")),
+    path("api/", include("orders_api.urls")),
+    path("", include("custom_index.urls")),
+    path("select2/", include("django_select2.urls")),
 ]
 
 if settings.DEBUG:
-    urlpatterns.extend(
-        static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    )
+    urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
