@@ -220,7 +220,7 @@ description = "Frontend for diploma project"
 optional = false
 python-versions = "*"
 files = [
-    {file = "diploma-frontend-0.7.tar.gz", hash = "sha256:72606db9eca9d4f5f8b50b17882c45b9612566e1ab5eb56160680d65b97ed96f"},
+    {file = "diploma-frontend-0.7.tar.gz", hash = "sha256:1a69bca0bee67f63ecf90e3dc5c2a579059324bc6168d1ab2260c99dd5d57b8e"},
 ]
 
 [package.source]
