@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY poetry.lock poetry.lock
 COPY pyproject.toml pyproject.toml
-COPY diploma-frontend-0.6.tar.gz diploma-frontend-0.6.tar.gz
+COPY diploma-frontend-0.7.tar.gz diploma-frontend-0.7.tar.gz
 
 RUN pip install --upgrade pip
 RUN pip install 'poetry==1.5.1'
