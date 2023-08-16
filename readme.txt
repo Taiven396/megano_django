@@ -4,8 +4,8 @@ Megano Shop
 В директории megano_backend создайте файл '.env'. Этот файл используется
 для хранения переменных окружения. Файл должен выглядеть так:
 
-sentry_dsn = your_sentry_dsn
 secret_key = your_django_secret_key
+password = your_email_smtp_password
 
 2. Установите Docker, если его еще нет.
 Следуйте инструкциям по ссылке: https://docs.docker.com/get-docker/.
