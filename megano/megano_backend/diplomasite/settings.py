@@ -154,17 +154,35 @@ MEDIA_ROOT = BASE_DIR / "uploads"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+LOGGING_DIR = BASE_DIR / 'logs/'
+
+if not os.path.exists(LOGGING_DIR):
+    os.makedirs(LOGGING_DIR)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
         "console": {"class": "logging.StreamHandler", "level": "INFO"},
+        "auth_log_file" : {"class" : "logging.FileHandler", "level": "INFO", "filename": os.path.join(LOGGING_DIR, "auth.log")},
+        'products_log_file': {'class': "logging.FileHandler", "level": "INFO", "filename": os.path.join(LOGGING_DIR, "products.log")},
+        'orders_log_file': {'class': 'logging.FileHandler', "level": "INFO", "filename": os.path.join(LOGGING_DIR, "orders.log")}
     },
     "loggers": {
         "info_log": {
-            "handlers": ["console"],
+            "handlers": ["auth_log_file"],
             "level": "INFO",
             "propagate": True,
+        },
+        "products_log": {
+            "handlers": ["products_log_file"],
+            "level": "INFO",
+            "propagate": True
+        },
+        "orders_log": {
+            "handlers": ["orders_log_file"],
+            "level": "INFO",
+            "propagate": True
         },
     },
 }

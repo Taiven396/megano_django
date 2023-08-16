@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.db.models import Q
 from .pagination import SalePagination, CatalogFilterPagination
+import logging
 from .serializers import (
     TagsSerializers,
     ProductSerializer,
@@ -12,6 +13,8 @@ from .serializers import (
     SaleSerializer,
 )
 
+
+products_info = logging.getLogger('products_log')
 
 class TagsListApiView(ListAPIView):
     model = Tags
@@ -147,6 +150,10 @@ class ProductListApiView(RetrieveAPIView):
         .prefetch_related("tags", "image", "reviews", "specifications")
         .all()
     )
+
+    def get(self, request, *args, **kwargs):
+        products_info.info(f'Просмотрен продукт с id {kwargs["pk"]}')
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """

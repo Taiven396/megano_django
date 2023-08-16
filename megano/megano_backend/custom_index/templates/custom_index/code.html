@@ -13,7 +13,7 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <h3 class="sign-in">Введите проверочный код</h3>
+        <h3 class="sign-in">Мы отправили код для подтверждения на ваш e-mail. Введите его для продолжения.</h3>
         <form method="post">
             {% csrf_token %}
             <input type="text" name="code" id="code" placeholder="Код"/>

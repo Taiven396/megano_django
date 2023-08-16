@@ -89,7 +89,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="products_in_order",
-                        to="frontend.order",
+                        to="orders_api.order",
                     ),
                 ),
                 (

@@ -9,12 +9,15 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from config_data import config
 import smtplib
+import logging
 from .serializers import (
     OrderSerializer,
     BasketSerializer,
     PaymentSerializer,
 )
 
+
+orders_info = logging.getLogger('orders_log')
 
 class BasketApiView(ListAPIView):
     serializer_class = BasketSerializer
@@ -123,10 +126,10 @@ class OrderListApiView(ListAPIView):
         связанных моделей 'products_in_order'.
         Возвращается только заказы, принадлежащие
         текущему пользователю (self.request.user)
-        и имеющие статус 'created'.
+        и имеющие статус 'Создан'.
         """
         queryset = Order.objects.prefetch_related("products_in_order").filter(
-            customer=self.request.user, status="created"
+            customer=self.request.user, status="Создан"
         )
         return queryset
 
@@ -142,7 +145,7 @@ class OrderListApiView(ListAPIView):
         total_cost = 0
         order = Order.objects.create(
             totalCost=0,
-            status="created",
+            status="Создан",
             customer=request.user if request.user.username else None,
         )
         for i_product in request.data:
@@ -155,8 +158,8 @@ class OrderListApiView(ListAPIView):
                 count=i_product["count"],
             )
             order.totalCost = total_cost
-            order.status = "Cоздан"
             order.save()
+            orders_info.info(f'Создан заказ №{order.pk}')
             request.session["cart"] = []
             data = {"orderId": order.id}
             request.session["orderId"] = order.id
@@ -201,7 +204,7 @@ class OrderRetrieveApiView(RetrieveAPIView):
         else:
             order.paymentType = "Онлайн оплата"
         order.deliveryType = request.data["deliveryType"]
-        order.status = "подтвержден"
+        order.status = "Подтвержден"
         order.save()
         return Response(
             {"orderId": order.id, "paymentType": order.paymentType}, status=200
@@ -238,8 +241,9 @@ class PaymentRetrieveApiView(RetrieveAPIView):
                 order=kwargs["pk"],
                 name=order.customer.profile.fullName,
             )
-            order.status = "оплачен"
+            order.status = "Оплачен"
             order.save()
+            orders_info.info(f'Заказ №{order.pk} оплачен онлайн.')
             url = "custom_index:progress"
             return Response(status=200)
         return Response(status=500)

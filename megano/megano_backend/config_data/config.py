@@ -11,4 +11,4 @@ SECRET_KEY = os.getenv(
 )
 SENTRY_DSN = os.getenv("sentry_dsn", "")
 DJANGO_DEBUG = os.getenv("django_debug", 0)
-MAIL_PASSWORD = "atzrgycyiofkdbzf"
+MAIL_PASSWORD = os.getenv('password')

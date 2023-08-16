@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 
 
 class OrderTestApi(APITestCase):
-    fixtures = ["product.json", "orders.json", "user.json", "auth.json"]
+    fixtures = [ "user.json", "auth.json", "product.json", "orders.json"]
 
     def test_order_get(self):
         url = reverse("auth_api:sign-in")
